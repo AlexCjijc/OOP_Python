@@ -1,0 +1,228 @@
+1. Первое
+Принцип инкапсуляции является одним из основных принципов ООП и подразумевает скрытие внутренней реализации объекта от внешнего мира. 
+класс Resume, который будет использовать инкапсуляцию для управления личными данными, такими как имя, контактная информация и опыт работы. Сделаем так, чтобы эти данные были скрыты от внешнего доступа, а доступ к ним осуществлялся через методы.
+class Resume {
+    // приватные поля
+    #name;
+    #contactInfo;
+    #experience;
+
+    constructor(name, contactInfo) {
+        this.#name = name; // имя
+        this.#contactInfo = contactInfo; // контактная информация
+        this.#experience = []; // изначальный опыт
+    }
+
+    addExperience(jobTitle, company, years) {
+        this.#experience.push({ jobTitle, company, years });
+        console.log(Новая работа добавлена: ${jobTitle}, ${company}, опыт работы: ${years} лет.);
+    }
+
+    removeExperience(company) {
+        this.#experience = this.#experience.filter(exp => exp.company !== company);
+        console.log(Работа в компании ${company} удалена из резюме.);
+    }
+
+    getExperience() {
+        return this.#experience.map(exp => {
+            return ${exp.jobTitle} в ${exp.company} (${exp.years} лет);
+        });
+    }
+
+    getSummary() {
+        return {
+            name: this.#name,
+            contactInfo: this.#contactInfo,
+            experience: this.getExperience(),
+        };
+    }
+}
+
+const myResume = new Resume('Иван Иванов', 'ivan@example.com');
+myResume.addExperience('Разработчик', 'Компания А', 2); // новая работа 
+myResume.addExperience('Старший разработчик', 'Компания Б', 3); // новая работа 
+console.log(myResume.getSummary());
+
+myResume.removeExperience('Компания А'); // работа в компании удалена
+console.log(myResume.getSummary());
+
+
+
+
+Наследование – это концепция, в которой одни классы, так называемыми родительскими, могут лежать в основе других (дочерних). При этом дочерние принимают свойства и поведения своего родительского класса.  
+Создадим родительский класс Car и два дочерних класса: ElectricCar и GasCar. Это продемонстрирует наследование, которое позволяет дочерним классам унаследовать свойства и методы от родительского класса.
+class Car {
+  constructor(brand, model) {
+    this.brand = brand; // бренд
+    this.model = model; // модель
+    this.speed = 0; //  скорость
+  }
+
+  accelerate(amount) {
+    this.speed += amount;
+    console.log(
+      ${this.brand} ${this.model} ускоряется до ${this.speed} км/ч.
+    );
+  }
+
+  brake(amount) {
+    this.speed = Math.max(0, this.speed - amount);
+    console.log(
+      ${this.brand} ${this.model} замедляется до ${this.speed} км/ч.
+    );
+  }
+
+  getStatus() {
+    return ${this.brand} ${this.model}: текущая скорость ${this.speed} км/ч.;
+  }
+}
+
+class ElectricCar extends Car {
+  // дочерний класс ElectricCar
+  constructor(brand, model, batteryLife) {
+    super(brand, model); // конструктор родителя
+    this.batteryLife = batteryLife; // емкость батареи
+  }
+
+  recharge() {
+    console.log(${this.brand} ${this.model} заряжается.);
+  }
+}
+
+class GasCar extends Car {
+  // дочерний класс GasCar
+  constructor(brand, model, fuelTankCapacity) {
+    super(brand, model); // конструктор родителя
+    this.fuelTankCapacity = fuelTankCapacity; // емкость бензобак
+  }
+
+  refuel() {
+    console.log(${this.brand} ${this.model} заправляется.);
+  }
+}
+
+const myElectricCar = new ElectricCar('Tesla', 'Model S', '100 кВтч');
+const myGasCar = new GasCar('Toyota', 'Camry', '60 литров');
+
+myElectricCar.accelerate(70);
+myElectricCar.recharge();
+console.log(myElectricCar.getStatus());
+myElectricCar.brake(50);
+
+myGasCar.accelerate(80);
+myGasCar.refuel();
+console.log(myGasCar.getStatus());
+
+
+1.	Родительский класс car имеет общие свойства (бренд, модель, скорость) и методы (ускорение, торможение, получение статуса). Конструктор и методы класса описывают общую логику для всех машин.
+2. Дочерние классы ElectricCar и GasCar. Оба класса наследуют от класса Car. Каждый дочерний класс добавляет свои уникальные свойства и методы (batteryLife для электрических машин и fuelTankCapacity для бензиновых).
+3. использование: экземпляры myElectricCar и myGasCar, которые используют методы и свойства как родительского, так и дочерних классов.
+
+полиморфизм 
+Полиморфизм - концепция в ооп, которая позволяет объектам разных классов обрабатывать одинаковые операции различным образом. В JS полиморфизм можно реализовать через метод переопределения в дочерних классах.
+В этом примере создадим родительский класс Shape и два дочерних класса: Rectangle и Circle. Каждый класс будет реализовывать свой метод area, демонстрируя полиморфизм, вызывая этот метод для различных объектов.
+class Shape {
+    area() {
+        throw new Error("Метод 'area()' должен быть реализован в подклассе.");
+    }
+}
+
+class Rectangle extends Shape {
+    constructor(width, height) {
+        super();
+        this.width = width;
+        this.height = height;
+    }
+
+    area() {
+        return this.width  this.height; // площадь прямоугольника
+    }
+}
+
+class Circle extends Shape {
+    constructor(radius) {
+        super();
+        this.radius = radius;
+    }
+
+    area() {
+        return Math.PI  this.radius  2; // площадь круга
+    }
+}
+
+const shapes = [
+    new Rectangle(10, 5),
+    new Circle(7)
+];
+
+shapes.forEach(shape => {
+    console.log(Площадь: ${shape.area()});
+});
+
+1. Родительский класс Shape: определяет метод area, который должен быть переопределён в дочерних классах. Если его не переопределить, будет выброшено исключение.
+2. Дочерний класс Rectangle:  Реализует метод area, который вычисляет площадь прямоугольника по формуле width  height.
+3. Дочерний класс Circle: Также реализует метод area, который вычисляет площадь круга по формуле pi  radius^2.
+4. Полиморфизм: В основном коде создается массив shapes, содержащий объекты разных типов: Rectangle и Circle.
+
+2.	Второе
+Есть несколько методов для восстановление предыдущей версии кода в Git в зависимости от ситуации.
+1. Использование git checkout для конкретного коммита:
+   Если надо вернуть состояние файлов к конкретному коммиту, можно использовать git checkout. Например, чтобы вернуться к коммиту с хэшом abc1234, надо выполнить команду:
+   bash
+   git checkout abc1234
+   После этого внесенные изменения, их будет трудно сохранить. Для создания новой ветки из этого состояния:
+   bash
+   git checkout -b имя-новой-ветки
+   
+2. Использование git reset:
+   Если полностью отменить коммиты и изменения, сделанные после определенного коммита, можно использовать команду git reset. Например:
+   bash
+   git reset --hard abc1234
+   Эта команда вернет ветку к указанному коммиту и удалит все изменения в файлах с последнего коммита.
+   Если надо сохранить изменения в рабочем каталоге, используйте:
+   bash
+   git reset --soft abc1234
+
+3. Использование git revert:
+   Если коммиты уже были отправлены в общий репозиторий, надо использовать git revert, чтобы создать новый коммит, который отменяет изменения предыдущих коммитов:
+   bash
+   git revert abc1234
+   Эта команда создаст новый коммит, который инверсирует изменения, внесенные в коммите abc1234.
+
+4. Просмотр истории коммитов:
+   Чтобы увидеть историю коммитов и найти нужный хэш, используйте команду:
+   bash
+   git log
+   Это поможет выбрать, к какому конкретному коммиту надо вернуться.
+После выполнения соответствующих действий надо проверить статус репозитория с помощью git status и, если необходимо, отправить изменения в удаленный репозиторий с помощью git push.
+
+3.	Третье
+JavaScript:
+function isPalindrome(str) {
+    // удаление пробелов и нижний регистр
+    const cleanedStr = str.replace(/\s+/g, '').toLowerCase();
+    
+    // проверка на палиндром
+    const reversedStr = cleanedStr.split('').reverse().join('');
+    return cleanedStr === reversedStr;
+}
+
+console.log(isPalindrome("А роза упала на лапу Азора")); // true
+console.log(isPalindrome("доктор")); // false
+console.log(isPalindrome("madam")); // true
+console.log(isPalindrome("Able was I ere I saw Elba")); // true 
+Python:
+def is_palindrome(word):
+    # приводим к нижнему регистру и убираем пробелы
+    cleaned_word = ''.join(word.lower().split())
+    # проверяем на палиндромом
+    return cleaned_word == cleaned_word[::-1]
+
+input_word = input("Ввод: ")
+if is_palindrome(input_word):
+    print(f'"{input_word}" палиндромом')
+else:
+    print(f'"{input_word}" не палиндромом')
+
+4.	Четвертое 
+Как такого опыта в IT нет. Проходил курсы «Формула ІТ. Разработчик прикладного ПО на языке Python», также проходил практику Школа 21 от Сбера, сделал небольшой полурабочий прототип медицинского приложения. Также сделал тг-бота для НГПУ https://t.me/NspuTimetableBot. Если надо будет, то закину все проекты на GitHub.
